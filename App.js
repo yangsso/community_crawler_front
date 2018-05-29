@@ -8,30 +8,36 @@ import preview from 'react-native-page-previewer';
 
 export default class App extends React.Component {
   constructor(props){
-    super(props);
-  //  this.socket = new ReconnectingWebSocket(
-    //  'ws://127.0.0.1:8000/ws/popularity/', null, {debug: true, reconnectInterval: 100000});
-    this.state = {
-      crawledData: null
-    }
     console.log("constructor");
+    super(props)
+    this.state = { crawledData: null }
+    const host = '-'
+    this.socket = new ReconnectingWebSocket(
+      'ws://' + host +'/ws/popularity/'
+    )
+    this.socket.debug = true
+    this.socket.timeoutInterval = 5400
+
+    this.socket.onopen = () => {
+      console.log("연결이된다");
+      this.socket.send(JSON.stringify({
+        'type': 'init'
+      }));
+    }
+
+    this.socket.onmessage = e => {
+      // console.log(JSON.parse(e.data))
+      this.setState({ crawledData: JSON.parse(e.data) })
+    };
   }
   componentWillMount(){
     console.log("componentWillMount");
   }
   componentDidMount(){
-  });
-//    this.socket.addEventListener('open', () => {
-  //    console.log("연결이된다");
-    //  this.socket.send(JSON.stringify({'type': 'init'}));
-  //  });
-  //  this.socket.onmessage = msg => {
-  //    console.log(JSON.parse(msg));
-  //    this.setState(crawledData:msg)
-//    };
+    console.log('componentDidMount')
   }
   componentWillUnmount(){
-//    this.socket.close();
+    this.socket.close();
     console.log("componentWillUnmount")
   }
   render() {
