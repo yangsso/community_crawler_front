@@ -1,19 +1,31 @@
 import React, {Component} from 'react';
-import {Text, View, Image} from 'react-native'
-import { Tile } from 'react-native-elements';
+import {Text, View, Image, WebView, StyleSheet} from 'react-native'
 
 export default class CrawlItem extends Component{
   render(){
     return (
-      <Tile
-        imageSrc= {{ require: '../assets/icon.png' }}
-        icon={{ name: 'play-circle', type: 'font-awesome' }} // optional
-        title = {this.props.title}
-        contentContainerStyle={{ height: 70 }}>
-        <View>
-          <Text>{this.props.desc}</Text>
-        </View>
-      </Tile>
+      <View>
+        <WebView
+          source={{ uri :this.props.url}}
+          style={{height:200}}
+          thirdPartyCookiesEnabled={false}
+          scrollEnabled={false}
+        />
+        <Text style={style.titleText}>{this.props.title}</Text>
+        <Text style={style.descTotal}>{this.props.viewCount}</Text>
+      </View>
     );
   }
 }
+
+const style = StyleSheet.create({
+  titleText: {
+    color: 'black',
+    fontWeight: 'bold',
+    fontSize: 20,
+  },
+  descTotal: {
+    color: 'gray',
+    fontSize: 15,
+  },
+})
